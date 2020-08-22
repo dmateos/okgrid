@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Grid, GridElement
+
+admin.site.register(Grid)
+admin.site.register(GridElement)

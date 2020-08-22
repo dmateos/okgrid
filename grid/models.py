@@ -9,7 +9,7 @@ class Grid(models.Model):
 
 
 class GridElement(models.Model):
-    grid = models.ForigenKey(Grid, on_delete=models.CASCADE)
+    grid = models.ForeignKey(Grid, on_delete=models.CASCADE)
 
     def _str__(self) -> str:
         return "{}-{}".format(self.grid.name, self.id)
