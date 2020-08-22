@@ -1,3 +1,15 @@
 from django.db import models
 
-# Create your models here.
+
+class Grid(models.Model):
+    name = models.CharField(max_length=32, default="FirstGrid")
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class GridElement(models.Model):
+    grid = models.ForigenKey(Grid, on_delete=models.CASCADE)
+
+    def _str__(self) -> str:
+        return "{}-{}".format(self.grid.name, self.id)
