@@ -1,14 +1,20 @@
 {% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">OKGrid</a>
+</nav>
 
 {% block bootstrap4_content %}
 <div class="container">
-    <h1>{% block title %}(no title){% endblock %}</h1>
+  <h1>{% block title %}(no title){% endblock %}</h1>
 
-    <p>
-    </p>
+  <p>
+  </p>
 
-    {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
 
-    {% block content %}(no content){% endblock %}
+  {% block content %}(no content){% endblock %}
 </div>
 {% endblock %}
