@@ -5,6 +5,10 @@ from rest_framework.test import APIClient
 from .models import Grid
 
 
+#
+# VIEW TESTS
+#
+
 def test_index_load():
     client = Client()
     response = client.get("/")
@@ -30,6 +34,10 @@ def test_grid_create():
     response = client.post("/api/grids/", {"name": "testgrid"}, format="json")
     assert response.status_code == 201
 
+
+#
+# API TESTS
+#
 
 def test_grid_create_unauthenticated():
     client = APIClient()
