@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.views.generic import ListView
-from .models import Grid, GridElement
+from django.views.generic import ListView, DetailView
+from django.urls import reverse
+from .models import Grid
 
 
 def root(request):
@@ -8,12 +9,12 @@ def root(request):
         context = {}
         return render(request, "index.html", context)
     else:
-        return redirect("/grids")
+        return redirect(reverse("grids"))
 
 
-class GridView(ListView):
+class GridListView(ListView):
     model = Grid
 
 
-class GridElementView(ListView):
-    model = GridElement
+class GridDetailView(DetailView):
+    model = Grid

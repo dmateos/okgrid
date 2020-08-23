@@ -16,7 +16,7 @@
       {% for grid in object_list %}
         <tr>
           <td> {{ grid.name }} </td>
-          <td> None </td>
+          <td> <a href="{% url "griddetails" grid.id %}"> Go </a> </td>
         </tr>
       {% endfor %}
     </tbody>

@@ -1,6 +1,7 @@
 import pytest
 from django.contrib.auth.models import User
 from django.test import Client
+from django.urls import reverse
 from rest_framework.test import APIClient
 from .models import Grid
 
@@ -25,7 +26,7 @@ def test_index_goto_grids_on_auth():
     client = Client()
     client.login(username="test", password="p455w0rd123")
 
-    response = client.get("/")
+    response = client.get(reverse("index"))
     assert response.status_code == 302
 
 
@@ -38,7 +39,7 @@ def test_grids_list_shows_list():
     Grid.objects.create(name="TestGrid1234")
     Grid.objects.create(name="GridTastic3000")
 
-    response = client.get("/grids/")
+    response = client.get(reverse("grids"))
 
     assert response.status_code == 200
     assert "TestGrid1234" in str(response.content)
@@ -46,6 +47,10 @@ def test_grids_list_shows_list():
 
 
 def test_grids_list_redirect_on_noauth():
+    pass
+
+
+def test_grids_detail_view():
     pass
 
 
@@ -63,14 +68,14 @@ def test_grid_create():
 # API TESTS
 #
 
-def test_grid_create_unauthenticated():
+def test_grid_api_create_grid_unauthenticated():
     client = APIClient()
     response = client.post("/api/grids/", {"name": "testgrid"}, format="json")
     assert response.status_code == 403
 
 
 @pytest.mark.django_db
-def test_grid_get():
+def test_grid_api_get_grid():
     create_user()
 
     client = APIClient()

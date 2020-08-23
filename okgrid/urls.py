@@ -10,8 +10,10 @@ router.register(r"grids", api.GridViewSet)
 router.register(r"gridelements", api.GridElementViewSet)
 
 urlpatterns = [
-    path('grids/', views.GridView.as_view()),
+    path('grids/', views.GridListView.as_view(), name="grids"),
+
+    path('grids/<int:pk>', views.GridDetailView.as_view(), name="griddetails"),
     path('api/', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('', views.root),
+    path('', views.root, name="index"),
 ]
