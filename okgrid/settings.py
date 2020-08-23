@@ -25,7 +25,7 @@ SECRET_KEY = '$+kni7=5u7dnq$uptrgy^g#zr4o8co@9z*p1*d2$38wf*m78m9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["dev1.mateos.lan"]
 
 
 # Application definition
