@@ -1,7 +1,14 @@
 import pytest
-from .models import Grid
 from django.contrib.auth.models import User
+from django.test import Client
 from rest_framework.test import APIClient
+from .models import Grid
+
+
+def test_index_load():
+    client = Client()
+    response = client.get("/")
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
