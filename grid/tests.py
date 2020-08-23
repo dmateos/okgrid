@@ -5,6 +5,10 @@ from rest_framework.test import APIClient
 from .models import Grid
 
 
+def create_user():
+    User.objects.create_user(username="test", password="p455w0rd123")
+
+
 #
 # VIEW TESTS
 #
@@ -17,7 +21,7 @@ def test_index_load():
 
 @pytest.mark.django_db
 def test_index_goto_grids_on_auth():
-    User.objects.create_user(username="test", password="p455w0rd123")
+    create_user()
     client = Client()
     client.login(username="test", password="p455w0rd123")
 
@@ -25,8 +29,20 @@ def test_index_goto_grids_on_auth():
     assert response.status_code == 302
 
 
+@pytest.mark.django_db
 def test_grids_list_shows_list():
-    pass
+    create_user()
+    client = Client()
+    client.login(username="test", password="p455w0rd123")
+
+    Grid.objects.create(name="TestGrid1234")
+    Grid.objects.create(name="GridTastic3000")
+
+    response = client.get("/grids/")
+
+    assert response.status_code == 200
+    assert "TestGrid1234" in str(response.content)
+    assert "GridTastic3000" in str(response.content)
 
 
 def test_grids_list_redirect_on_noauth():
@@ -35,7 +51,7 @@ def test_grids_list_redirect_on_noauth():
 
 @pytest.mark.django_db
 def test_grid_create():
-    User.objects.create_user(username="test", password="p455w0rd123")
+    create_user()
     client = APIClient()
     client.login(username="test", password="p455w0rd123")
 
@@ -55,7 +71,7 @@ def test_grid_create_unauthenticated():
 
 @pytest.mark.django_db
 def test_grid_get():
-    User.objects.create_user(username="test", password="p455w0rd123")
+    create_user()
 
     client = APIClient()
     client.login(username="test", password="p455w0rd123")
