@@ -11,7 +11,7 @@ class GridSerializer(serializers.HyperlinkedModelSerializer):
 class GridElementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GridElement
-        fields = ["id"]
+        fields = ["id", "grid"]
 
 
 class GridViewSet(viewsets.ModelViewSet):

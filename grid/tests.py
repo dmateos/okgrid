@@ -54,8 +54,12 @@ def test_grids_detail_view():
     pass
 
 
+#
+# API TESTS
+#
+
 @pytest.mark.django_db
-def test_grid_create():
+def test_grid_api_create():
     create_user()
     client = APIClient()
     client.login(username="test", password="p455w0rd123")
@@ -64,11 +68,7 @@ def test_grid_create():
     assert response.status_code == 201
 
 
-#
-# API TESTS
-#
-
-def test_grid_api_create_grid_unauthenticated():
+def test_grid_api_create_unauthenticated():
     client = APIClient()
     response = client.post("/api/grids/", {"name": "testgrid"}, format="json")
     assert response.status_code == 403
@@ -87,3 +87,11 @@ def test_grid_api_get_grid():
     Grid.objects.create(name="TestGrid")
     response = client.get("/api/grids/1/")
     assert response.status_code == 200
+
+
+def test_grid_elements_api_create():
+    pass
+
+
+def test_grid_elements_api_get():
+    pass
