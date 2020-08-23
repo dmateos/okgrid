@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Grids
+{% endblock %}
+
+{% block content %}
+  <table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th> Name </th>
+        <th> URL </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for grid in object_list %}
+        <tr>
+          <td> {{ grid.name }} </td>
+          <td> None </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

@@ -25,6 +25,14 @@ def test_index_goto_grids_on_auth():
     assert response.status_code == 302
 
 
+def test_grids_list_shows_list():
+    pass
+
+
+def test_grids_list_redirect_on_noauth():
+    pass
+
+
 @pytest.mark.django_db
 def test_grid_create():
     User.objects.create_user(username="test", password="p455w0rd123")
