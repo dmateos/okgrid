@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from .models import Grid, GridElement
 
 
 def root(request):
-    context = {}
-    return render(request, "index.html", context)
+    if not request.user.is_authenticated:
+        context = {}
+        return render(request, "index.html", context)
+    else:
+        return redirect("/grids")
 
 
 class GridView(ListView):

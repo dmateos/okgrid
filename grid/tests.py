@@ -12,6 +12,16 @@ def test_index_load():
 
 
 @pytest.mark.django_db
+def test_index_goto_grids_on_auth():
+    User.objects.create_user(username="test", password="p455w0rd123")
+    client = Client()
+    client.login(username="test", password="p455w0rd123")
+
+    response = client.get("/")
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db
 def test_grid_create():
     User.objects.create_user(username="test", password="p455w0rd123")
     client = APIClient()
