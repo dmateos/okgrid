@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.test import Client
 from django.urls import reverse
 from rest_framework.test import APIClient
-from .models import Grid
+from .models import Grid, GridElement
 
 
 def create_user(client=None):
@@ -15,6 +15,7 @@ def create_user(client=None):
 #
 # VIEW TESTS
 #
+
 
 def test_index_load():
     client = Client()
@@ -67,9 +68,26 @@ def test_grids_detail_view():
     assert "TestGrid1234" in str(response.content)
 
 
+@pytest.mark.django_db
+def test_grids_detail_view_only_shows_own_elements():
+    client = Client()
+    create_user(client)
+
+    grid = Grid.objects.create(name="TestGrid1234")
+    grid2 = Grid.objects.create(name="TestGrid1234")
+    g1 = GridElement.objects.create(grid=grid)
+    g2 = GridElement.objects.create(grid=grid2)
+
+    response = client.get(reverse("griddetails", args=(grid.id,)))
+    assert response.status_code == 200
+    assert str(g1.id) in str(response.content)
+    assert str(g2.id) not in str(response.content)
+
+
 #
 # API TESTS
 #
+
 
 @pytest.mark.django_db
 def test_grid_api_create():
@@ -99,8 +117,38 @@ def test_grid_api_get_grid():
     assert response.status_code == 200
 
 
+@pytest.mark.django_db
 def test_grid_elements_api_create():
-    pass
+    client = APIClient()
+    create_user(client)
+
+    Grid.objects.create(name="TestGrid")
+    response = client.post(
+        "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
+    )
+    assert response.status_code == 201
+
+
+@pytest.mark.django_db
+def test_grid_elements_api_create_unauthorised():
+    client = APIClient()
+
+    Grid.objects.create(name="TestGrid")
+    response = client.post(
+        "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
+    )
+    assert response.status_code == 403
+
+
+@pytest.mark.django_db
+def test_grid_elements_api_create_no_grid():
+    client = APIClient()
+    create_user(client)
+
+    response = client.post(
+        "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
+    )
+    assert response.status_code == 400
 
 
 def test_grid_elements_api_get():

@@ -13,6 +13,3 @@ class Grid(models.Model):
 
     def __str__(self) -> str:
         return self.name
-
-    def add_grid_element(self, element: GridElement) -> bool:
-        return True
