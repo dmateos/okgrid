@@ -178,8 +178,9 @@ def test_grid_elements_api_create():
 @pytest.mark.django_db
 def test_grid_elements_api_create_unauthorised():
     client = APIClient()
+    user = create_user()
 
-    Grid.objects.create(name="TestGrid")
+    Grid.objects.create(name="TestGrid", user=user)
     response = client.post(
         "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
     )
