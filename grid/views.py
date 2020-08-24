@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Grid
 
 
@@ -12,9 +13,9 @@ def root(request):
         return redirect(reverse("grids"))
 
 
-class GridListView(ListView):
+class GridListView(LoginRequiredMixin, ListView):
     model = Grid
 
 
-class GridDetailView(DetailView):
+class GridDetailView(LoginRequiredMixin, DetailView):
     model = Grid

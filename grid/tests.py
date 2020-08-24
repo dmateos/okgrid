@@ -6,8 +6,10 @@ from rest_framework.test import APIClient
 from .models import Grid
 
 
-def create_user():
+def create_user(client=None):
     User.objects.create_user(username="test", password="p455w0rd123")
+    if client:
+        client.login(username="test", password="p455w0rd123")
 
 
 #
@@ -22,9 +24,8 @@ def test_index_load():
 
 @pytest.mark.django_db
 def test_index_goto_grids_on_auth():
-    create_user()
     client = Client()
-    client.login(username="test", password="p455w0rd123")
+    create_user(client)
 
     response = client.get(reverse("index"))
     assert response.status_code == 302
@@ -32,9 +33,8 @@ def test_index_goto_grids_on_auth():
 
 @pytest.mark.django_db
 def test_grids_list_shows_list():
-    create_user()
     client = Client()
-    client.login(username="test", password="p455w0rd123")
+    create_user(client)
 
     Grid.objects.create(name="TestGrid1234")
     Grid.objects.create(name="GridTastic3000")
@@ -47,11 +47,23 @@ def test_grids_list_shows_list():
 
 
 def test_grids_list_redirect_on_noauth():
-    pass
+    client = Client()
+
+    response = client.get(reverse("grids"), follow=True)
+    assert response.status_code == 404
 
 
+@pytest.mark.django_db
 def test_grids_detail_view():
-    pass
+    client = Client()
+    create_user(client)
+
+    response = client.get(reverse("griddetails", args=(1,)))
+    assert response.status_code == 404
+
+    grid = Grid.objects.create(name="TestGrid1234")
+    response = client.get(reverse("griddetails", args=(grid.id,)))
+    assert response.status_code == 200
 
 
 #
@@ -60,9 +72,8 @@ def test_grids_detail_view():
 
 @pytest.mark.django_db
 def test_grid_api_create():
-    create_user()
     client = APIClient()
-    client.login(username="test", password="p455w0rd123")
+    create_user(client)
 
     response = client.post("/api/grids/", {"name": "testgrid"}, format="json")
     assert response.status_code == 201
@@ -76,10 +87,8 @@ def test_grid_api_create_unauthenticated():
 
 @pytest.mark.django_db
 def test_grid_api_get_grid():
-    create_user()
-
     client = APIClient()
-    client.login(username="test", password="p455w0rd123")
+    create_user(client)
 
     response = client.get("/api/grids/1/")
     assert response.status_code == 404
