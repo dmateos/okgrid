@@ -11,7 +11,7 @@ class GridSerializer(serializers.HyperlinkedModelSerializer):
 class GridElementSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = GridElement
-        fields = ["id", "grid"]
+        fields = ["id", "grid", "uid"]
 
 
 class GridViewSet(viewsets.ModelViewSet):
@@ -21,6 +21,10 @@ class GridViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        return query.filter(user=self.request.user)
 
 
 class GridElementViewSet(viewsets.ModelViewSet):

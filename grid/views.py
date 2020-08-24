@@ -16,6 +16,14 @@ def root(request):
 class GridListView(LoginRequiredMixin, ListView):
     model = Grid
 
+    def get_queryset(self):
+        query = super().get_queryset()
+        return query.filter(user=self.request.user)
+
 
 class GridDetailView(LoginRequiredMixin, DetailView):
     model = Grid
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        return query.filter(user=self.request.user)

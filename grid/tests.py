@@ -48,6 +48,20 @@ def test_grids_list_shows_list():
     assert "GridTastic3000" in str(response.content)
 
 
+@pytest.mark.django_db
+def test_grid_list_only_shows_current_users_grids():
+    client = Client()
+    user = create_user(client)
+    user2 = User.objects.create_user(username="test2", password="p455w0rd123")
+
+    Grid.objects.create(name="TestGrid1234", user=user)
+    Grid.objects.create(name="GridTastic3000", user=user2)
+
+    response = client.get(reverse("grids"))
+    assert "TestGrid1234" in str(response.content)
+    assert "GridTastic3000" not in str(response.content)
+
+
 def test_grids_list_redirect_on_noauth():
     client = Client()
 
@@ -70,6 +84,17 @@ def test_grids_detail_view():
 
 
 @pytest.mark.django_db
+def test_grids_detail_view_wont_show_other_users_grid():
+    client = Client()
+    create_user(client)
+    user2 = User.objects.create_user(username="test2", password="p455w0rd123")
+
+    grid = Grid.objects.create(name="TestGrid1234", user=user2)
+    response = client.get(reverse("griddetails", args=(grid.id,)))
+    assert response.status_code == 404
+
+
+@pytest.mark.django_db
 def test_grids_detail_view_only_shows_own_elements():
     client = Client()
     user = create_user(client)
@@ -81,8 +106,8 @@ def test_grids_detail_view_only_shows_own_elements():
 
     response = client.get(reverse("griddetails", args=(grid.id,)))
     assert response.status_code == 200
-    assert str(g1.id) in str(response.content)
-    assert str(g2.id) not in str(response.content)
+    assert str(g1.uid) in str(response.content)
+    assert str(g2.uid) not in str(response.content)
 
 
 #
@@ -129,7 +154,13 @@ def test_grid_api_get_grid():
 
 @pytest.mark.django_db
 def test_grid_api_get_grid_filtered_by_current_user():
-    assert False
+    client = APIClient()
+    create_user(client)
+    user2 = User.objects.create_user(username="test2", password="p455w0rd123")
+    Grid.objects.create(name="TestGrid", user=user2)
+
+    response = client.get("/api/grids/1/")
+    assert response.status_code == 404
 
 
 @pytest.mark.django_db
@@ -166,9 +197,24 @@ def test_grid_elements_api_create_no_grid():
     assert response.status_code == 400
 
 
+@pytest.mark.django_db
 def test_grid_elements_api_get():
-    assert False
+    client = APIClient()
+    user = create_user(client)
+
+    grid = Grid.objects.create(name="TestGrid", user=user)
+    GridElement.objects.create(grid=grid)
+
+    resposne = client.get("/api/gridelements/")
+    assert resposne.status_code == 200
 
 
+@pytest.mark.django_db
 def test_grid_elements_api_get_filtered_by_current_user():
+    client = APIClient()
+    create_user(client)
+    user2 = User.objects.create_user(username="test2", password="p455w0rd123")
+
+    Grid.objects.create(name="TestGrid", user=user2)
+
     assert False
