@@ -31,3 +31,7 @@ class GridElementViewSet(viewsets.ModelViewSet):
     queryset = GridElement.objects.all()
     serializer_class = GridElementSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        return query.filter(grid__user__id=self.request.user.id)

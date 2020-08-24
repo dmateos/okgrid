@@ -186,6 +186,10 @@ def test_grid_elements_api_create_unauthorised():
     assert response.status_code == 403
 
 
+def test_grid_elements_api_create_cant_add_to_other_users_grid():
+    assert False
+
+
 @pytest.mark.django_db
 def test_grid_elements_api_create_no_grid():
     client = APIClient()
@@ -203,10 +207,11 @@ def test_grid_elements_api_get():
     user = create_user(client)
 
     grid = Grid.objects.create(name="TestGrid", user=user)
-    GridElement.objects.create(grid=grid)
+    ge = GridElement.objects.create(grid=grid)
 
-    resposne = client.get("/api/gridelements/")
-    assert resposne.status_code == 200
+    response = client.get("/api/gridelements/")
+    assert response.status_code == 200
+    assert str(ge.uid) in str(response.content)
 
 
 @pytest.mark.django_db
@@ -215,6 +220,8 @@ def test_grid_elements_api_get_filtered_by_current_user():
     create_user(client)
     user2 = User.objects.create_user(username="test2", password="p455w0rd123")
 
-    Grid.objects.create(name="TestGrid", user=user2)
+    grid = Grid.objects.create(name="TestGrid", user=user2)
+    ge = GridElement.objects.create(grid=grid)
 
-    assert False
+    response = client.get("/api/gridelements/")
+    assert str(ge.uid) not in str(response.content)
