@@ -64,6 +64,7 @@ def test_grids_detail_view():
     grid = Grid.objects.create(name="TestGrid1234")
     response = client.get(reverse("griddetails", args=(grid.id,)))
     assert response.status_code == 200
+    assert "TestGrid1234" in str(response.content)
 
 
 #
