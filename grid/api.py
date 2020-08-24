@@ -19,6 +19,9 @@ class GridViewSet(viewsets.ModelViewSet):
     serializer_class = GridSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class GridElementViewSet(viewsets.ModelViewSet):
     queryset = GridElement.objects.all()
