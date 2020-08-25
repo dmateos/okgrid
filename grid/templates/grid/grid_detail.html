@@ -3,12 +3,16 @@
 {% block title %} {{ object.name }} {% endblock %}
 
 {% block content %}
-  {% for el in object.gridelement_set.all %}
-    <div class="card" style="width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">Card title</h5>
-        <p class="card-text">Test{{ el.uid }}</p>
+  <div class="row">
+    {% for el in object.gridelement_set.all %}
+      <div class=col-md4">
+        <div class="card" style="width: 18rem;">
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">Test{{ el.uid }}</p>
+          </div>
+        </div>
       </div>
-    </div>
-  {% endfor %}
+    {% endfor %}
+  </div>
 {% endblock %}
