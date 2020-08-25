@@ -6,10 +6,10 @@
   <div class="row">
     {% for el in object.gridelement_set.all %}
       <div class=col-md4">
-        <div class="card" style="width: 18rem;">
+        <div class="card bg-success" style="width: 18rem;">
           <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">Test{{ el.uid }}</p>
+            <h5 class="card-title">Test</h5>
+            <p class="card-text">{{ el.uid }}</p>
           </div>
         </div>
       </div>

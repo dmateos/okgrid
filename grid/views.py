@@ -16,6 +16,7 @@ class GridListView(LoginRequiredMixin, ListView):
     model = Grid
 
     def get_queryset(self):
+        # Limit the scope to the current user
         query = super().get_queryset()
         return query.filter(user=self.request.user)
 
@@ -24,5 +25,6 @@ class GridDetailView(LoginRequiredMixin, DetailView):
     model = Grid
 
     def get_queryset(self):
+        # Limit the scope to the current user
         query = super().get_queryset()
         return query.filter(user=self.request.user)
