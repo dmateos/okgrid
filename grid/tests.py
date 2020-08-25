@@ -169,9 +169,7 @@ def test_grid_elements_api_create():
     user = create_user(client)
 
     Grid.objects.create(name="TestGrid", user=user)
-    response = client.post(
-        "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
-    )
+    response = client.post("/api/gridelements/", {"grid": "1"}, format="json")
     assert response.status_code == 201
 
 
@@ -181,14 +179,19 @@ def test_grid_elements_api_create_unauthorised():
     user = create_user()
 
     Grid.objects.create(name="TestGrid", user=user)
-    response = client.post(
-        "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
-    )
+    response = client.post("/api/gridelements/", {"grid": "1"}, format="json")
     assert response.status_code == 403
 
 
+@pytest.mark.django_db
 def test_grid_elements_api_create_cant_add_to_other_users_grid():
-    assert False
+    client = APIClient()
+    create_user(client)
+    user2 = User.objects.create_user(username="test2", password="p455w0rd123")
+    Grid.objects.create(name="TestGrid", user=user2)
+
+    response = client.post("/api/gridelements/", {"grid": "1"}, format="json")
+    assert response.status_code == 400
 
 
 @pytest.mark.django_db
@@ -196,9 +199,7 @@ def test_grid_elements_api_create_no_grid():
     client = APIClient()
     create_user(client)
 
-    response = client.post(
-        "/api/gridelements/", {"grid": "/api/grids/1/"}, format="json"
-    )
+    response = client.post("/api/gridelements/", {"grid": "1"}, format="json")
     assert response.status_code == 400
 
 

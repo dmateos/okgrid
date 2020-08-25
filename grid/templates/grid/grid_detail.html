@@ -6,6 +6,8 @@
 
 {% block content %}
   {% for el in object.gridelement_set.all %}
-    {{ el.uid }}
+    <div>
+      {{ el.uid }}
+    </div>
   {% endfor %}
 {% endblock %}
