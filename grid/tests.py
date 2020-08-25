@@ -20,7 +20,7 @@ def create_user(client=None):
 
 def test_index_load():
     client = Client()
-    response = client.get("/")
+    response = client.get(reverse("index"))
     assert response.status_code == 200
 
 

@@ -7,8 +7,7 @@ from .models import Grid
 
 def root(request):
     if not request.user.is_authenticated:
-        context = {}
-        return render(request, "index.html", context)
+        return render(request, "index.html", {})
     else:
         return redirect(reverse("grids"))
 
