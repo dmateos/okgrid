@@ -34,7 +34,7 @@ def test_index_goto_grids_on_auth():
 
 
 @pytest.mark.django_db
-def test_grids_list_shows_list():
+def test_grids_list_shows_list_of_users_grids():
     client = Client()
     user = create_user(client)
 
@@ -84,7 +84,7 @@ def test_grids_detail_view():
 
 
 @pytest.mark.django_db
-def test_grids_detail_view_wont_show_other_users_grid():
+def test_grids_detail_view_wont_load_other_users_grid():
     client = Client()
     create_user(client)
     user2 = User.objects.create_user(username="test2", password="p455w0rd123")
@@ -95,7 +95,7 @@ def test_grids_detail_view_wont_show_other_users_grid():
 
 
 @pytest.mark.django_db
-def test_grids_detail_view_only_shows_own_elements():
+def test_grids_detail_view_only_shows_current_users_grid_elements():
     client = Client()
     user = create_user(client)
 
@@ -116,7 +116,7 @@ def test_grids_detail_view_only_shows_own_elements():
 
 
 @pytest.mark.django_db
-def test_grid_api_create():
+def test_api_create_grid():
     client = APIClient()
     create_user(client)
 
@@ -125,7 +125,7 @@ def test_grid_api_create():
 
 
 @pytest.mark.django_db
-def test_grid__api_create_associates_user():
+def test_api_create_grid_associates_current_user():
     client = APIClient()
     user = create_user(client)
 
@@ -133,14 +133,14 @@ def test_grid__api_create_associates_user():
     assert Grid.objects.first().user == user
 
 
-def test_grid_api_create_unauthenticated():
+def test_api_create_grid_unauthenticated_rejected():
     client = APIClient()
     response = client.post("/api/grids/", {"name": "testgrid"}, format="json")
     assert response.status_code == 403
 
 
 @pytest.mark.django_db
-def test_grid_api_get_grid():
+def test_api_get_grid():
     client = APIClient()
     user = create_user(client)
 
@@ -153,7 +153,7 @@ def test_grid_api_get_grid():
 
 
 @pytest.mark.django_db
-def test_grid_api_get_grid_filtered_by_current_user():
+def test_api_get_grid_filtered_by_current_user():
     client = APIClient()
     create_user(client)
     user2 = User.objects.create_user(username="test2", password="p455w0rd123")
@@ -164,7 +164,7 @@ def test_grid_api_get_grid_filtered_by_current_user():
 
 
 @pytest.mark.django_db
-def test_grid_elements_api_create():
+def test_api_create_grid_element():
     client = APIClient()
     user = create_user(client)
 
@@ -174,7 +174,7 @@ def test_grid_elements_api_create():
 
 
 @pytest.mark.django_db
-def test_grid_elements_api_create_unauthorised():
+def test_api_create_grid_element_unauthenticated_rejected():
     client = APIClient()
     user = create_user()
 
@@ -184,7 +184,7 @@ def test_grid_elements_api_create_unauthorised():
 
 
 @pytest.mark.django_db
-def test_grid_elements_api_create_cant_add_to_other_users_grid():
+def test_api_create_grid_element_cant_add_to_other_users_grid():
     client = APIClient()
     create_user(client)
     user2 = User.objects.create_user(username="test2", password="p455w0rd123")
@@ -195,7 +195,7 @@ def test_grid_elements_api_create_cant_add_to_other_users_grid():
 
 
 @pytest.mark.django_db
-def test_grid_elements_api_create_no_grid():
+def test_api_grid_element_cant_create_with_no_grid():
     client = APIClient()
     create_user(client)
 
@@ -204,7 +204,7 @@ def test_grid_elements_api_create_no_grid():
 
 
 @pytest.mark.django_db
-def test_grid_elements_api_get():
+def test_api_get_grid_element():
     client = APIClient()
     user = create_user(client)
 
@@ -217,7 +217,7 @@ def test_grid_elements_api_get():
 
 
 @pytest.mark.django_db
-def test_grid_elements_api_get_filtered_by_current_user():
+def test_api_grid_elements_get_filtered_by_current_user():
     client = APIClient()
     create_user(client)
     user2 = User.objects.create_user(username="test2", password="p455w0rd123")
