@@ -6,8 +6,11 @@
 
 {% block content %}
   {% for el in object.gridelement_set.all %}
-    <div>
-      {{ el.uid }}
+    <div class="card" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">Test{{ el.uid }}</p>
+      </div>
     </div>
   {% endfor %}
 {% endblock %}

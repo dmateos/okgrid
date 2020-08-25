@@ -17,8 +17,7 @@ class GridElementSerializer(serializers.ModelSerializer):
         # Only allow an element to be added to a grid
         # owned by the current user.
         user = self.context["request"].user
-        grid = Grid.objects.get(pk=attrs["grid"].id)
-        if grid.user == user:
+        if attrs["grid"].user == user:
             return attrs
         raise serializers.ValidationError
 
