@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}
-  Grid {{ object.name }}
-{% endblock %}
+{% block title %} {{ object.name }} {% endblock %}
 
 {% block content %}
   {% for el in object.gridelement_set.all %}
