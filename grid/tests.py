@@ -95,12 +95,12 @@ def test_grids_detail_view_wont_load_other_users_grid():
 
 
 @pytest.mark.django_db
-def test_grids_detail_view_only_shows_current_users_grid_elements():
+def test_grids_detail_view_only_shows_current_grids_grid_elements():
     client = Client()
     user = create_user(client)
 
     grid = Grid.objects.create(name="TestGrid1234", user=user)
-    grid2 = Grid.objects.create(name="TestGrid1234", user=user)
+    grid2 = Grid.objects.create(name="TestGrid12345", user=user)
     g1 = GridElement.objects.create(grid=grid)
     g2 = GridElement.objects.create(grid=grid2)
 
@@ -150,6 +150,16 @@ def test_api_get_grid():
     Grid.objects.create(name="TestGrid", user=user)
     response = client.get("/api/grids/1/")
     assert response.status_code == 200
+
+
+@pytest.mark.django_db
+def test_api_get_grid_unauthenticated():
+    client = APIClient()
+    user = create_user()
+
+    Grid.objects.create(name="TestGrid", user=user)
+    response = client.get("/api/grids/1/")
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
@@ -214,6 +224,18 @@ def test_api_get_grid_element():
     response = client.get("/api/gridelements/")
     assert response.status_code == 200
     assert str(ge.uid) in str(response.content)
+
+
+@pytest.mark.django_db
+def test_api_grid_element_unauthenticated():
+    client = APIClient()
+    user = create_user()
+
+    grid = Grid.objects.create(name="TestGrid", user=user)
+    GridElement.objects.create(grid=grid)
+
+    response = client.get("/api/gridelements/")
+    assert response.status_code == 403
 
 
 @pytest.mark.django_db
