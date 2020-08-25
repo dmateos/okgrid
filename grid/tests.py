@@ -195,7 +195,7 @@ def test_api_create_grid_element_cant_add_to_other_users_grid():
 
 
 @pytest.mark.django_db
-def test_api_grid_element_cant_create_with_no_grid():
+def test_api_create_grid_element_cant_with_no_grid():
     client = APIClient()
     create_user(client)
 
@@ -217,7 +217,7 @@ def test_api_get_grid_element():
 
 
 @pytest.mark.django_db
-def test_api_grid_elements_get_filtered_by_current_user():
+def test_api_get_grid_elements_filtered_by_current_user():
     client = APIClient()
     create_user(client)
     user2 = User.objects.create_user(username="test2", password="p455w0rd123")
